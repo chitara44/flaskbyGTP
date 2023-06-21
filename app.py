@@ -19,22 +19,22 @@ def get_drafts():
 # Endpoint POST para crear un nuevo sorteo
 @app.route('/drafts', methods=['POST'])
 def create_draft():
-    # Obtener los datos enviados por el cliente
+    # get the customers data
     data = request.get_json()
-    # Agregar el nuevo sorteo al archivo CSV
+    # Add a new draft to CSV file
     with open('expdata2.csv', 'a', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=['idSorteo', 'fecha', 'tipo', 'ganador', 'nuevo', 'n1', 'n2', 'n3', 'n4', 'n5', 'sb'])
         writer.writerow(data)
-    # Devolver los datos del nuevo sorteo como un objeto JSON
+    # retrieves new draft data as a JSON object
     return jsonify(data)
 
 
-# Endpoint PUT para actualizar un sorteo existente
+# Endpoint to update an existing draft through a PUT operation
 @app.route('/drafts/<int:idSorteo>', methods=['PUT'])
 def update_draft(idSorteo):
-    # Obtener los datos enviados por el cliente
+    # get the customers data
     data = request.get_json()
-    # Actualizar los datos del sorteo correspondiente en el archivo CSV
+    # Update a draft to CSV file
     with open('expdata2.csv', 'r', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         sorteos = []
