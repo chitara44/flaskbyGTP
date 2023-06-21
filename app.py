@@ -3,20 +3,20 @@ from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-# Endpoint GET para obtener la lista completa de sorteos
+# Endpoint GET to get all the drafts results
 @app.route('/drafts', methods=['GET'])
 def get_drafts():
-    # Abrir el archivo CSV y leer los datos
+    # Reads a CSV file to get all the information within
     with open('expdata2.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         users = []
         for row in reader:
             users.append(row)
-    # Devolver los datos como un objeto JSON
+    # retrieves a draft data as a JSON object
     return jsonify(users)
 
 
-# Endpoint POST para crear un nuevo sorteo
+# Endpoint POST to create a newdraft
 @app.route('/drafts', methods=['POST'])
 def create_draft():
     # get the customers data
@@ -46,13 +46,13 @@ def update_draft(idSorteo):
         writer = csv.DictWriter(csvfile, fieldnames=['idSorteo', 'fecha', 'tipo', 'ganador', 'nuevo', 'n1', 'n2', 'n3', 'n4', 'n5', 'sb'])
         writer.writeheader()
         writer.writerows(sorteos)
-    # Devolver los datos actualizados del sorteo como un objeto JSON
+    # retrieves an updated draft data as a JSON object
     return jsonify(data)
 
-# Endpoint DELETE para eliminar un usuario existente
+# Endpoint DELETE for deleting an existing draft
 @app.route('/drafts/<int:idSorteo>', methods=['DELETE'])
 def delete_draft(idSorteo):
-    # Eliminar el usuario correspondiente del archivo CSV
+    # Deletes a draft from CSV file
     with open('expdata2.csv', 'r', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         users = []
@@ -63,7 +63,7 @@ def delete_draft(idSorteo):
         writer = csv.DictWriter(csvfile, fieldnames=['idSorteo', 'fecha', 'tipo', 'ganador', 'nuevo', 'n1', 'n2', 'n3', 'n4', 'n5', 'sb'])
         writer.writeheader()
         writer.writerows(users)
-    # Devolver un mensaje indicando que el usuario ha sido eliminado
+    # retrieves a message indicating that a draft has been deleted
     return 'El sorteo con ID {} ha sido eliminado'.format(idSorteo)
 
 if __name__ == '__main__':
