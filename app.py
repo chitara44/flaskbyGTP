@@ -1,7 +1,25 @@
 import csv
+
+from database import Base, engine, ToDo
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from filemanager import Files
+from db_connection import DB_connection
+from dfs_data_class import dfs_data_class as dfs
 from flask import Flask, jsonify, request
 
+
+class ToDoRequest(BaseModel):
+    task: str
+
+# Create the database
+Base.metadata.create_all(engine)
+
 app = Flask(__name__)
+
+arrayfiles = Files()
+
+db_con = DB_connection()
 
 # Endpoint GET to get all the drafts results
 @app.route('/drafts', methods=['GET'])
@@ -14,6 +32,17 @@ def get_drafts():
             users.append(row)
     # retrieves a draft data as a JSON object
     return jsonify(users)
+
+@app.route('/drafts/{id}', methods=['GET'])
+def read_todo(id: int):
+    idStr = str(id)
+    # create a new database session
+    session = Session(bind=engine, expire_on_commit=False)
+    # get the todo item with the given id
+    todo = session.query(ToDo).get(id)
+    # close the session
+    session.close()
+    return f"todo item with id: {todo.id} and task: {todo.task} then parameter is {idStr} "
 
 
 # Endpoint POST to create a newdraft

@@ -2,9 +2,7 @@ import pyodbc
 import config
 import pandas as pd
 
-class db_connection:
-
-
+class DB_connection:
     def connect_db(self, pwd):
         driver = config.DRIVER
         server = config.SERVER
